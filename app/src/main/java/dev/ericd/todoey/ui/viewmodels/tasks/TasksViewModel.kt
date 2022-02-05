@@ -2,12 +2,16 @@ package dev.ericd.todoey.ui.viewmodels.tasks
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.core.tasks.TaskModel
 import dev.ericd.todoey.ui.components.TaskComponent
 import dev.ericd.todoey.ui.components.TaskState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 open class TasksViewModel(
     private val repository: Task.Repository
@@ -19,6 +23,11 @@ open class TasksViewModel(
 
     val tasks: StateFlow<List<TaskComponent.State>>
         get() = backingTasks
+
+    private var taskJob: Job? =
+        repository.taskFlow
+        .onEach(::presentTasks)
+        .launchIn(viewModelScope)
 
     open fun getAllTasks() {
 
@@ -62,7 +71,14 @@ open class TasksViewModel(
             task
         )
 
-        getAllTasks()
+    }
+
+    override fun onCleared() {
+
+        taskJob?.cancel()
+        taskJob = null
+
+        super.onCleared()
 
     }
 

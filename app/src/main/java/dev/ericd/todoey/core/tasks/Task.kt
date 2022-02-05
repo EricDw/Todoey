@@ -1,5 +1,7 @@
 package dev.ericd.todoey.core.tasks
 
+import dev.ericd.todoey.common.repository.IRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
@@ -18,11 +20,9 @@ interface Task {
         val value: String = UUID.randomUUID().toString()
     )
 
-    interface Repository {
+    interface Repository: IRepository<Id, Task> {
 
-        fun getAll(): List<Task>
-
-        fun insert(task: Task)
+        val taskFlow: StateFlow<List<Task>>
 
     }
 
