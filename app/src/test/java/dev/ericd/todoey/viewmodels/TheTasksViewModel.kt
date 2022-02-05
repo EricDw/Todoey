@@ -7,8 +7,6 @@ import dev.ericd.todoey.data.repositories.fakes.FakeTaskRepository
 import dev.ericd.todoey.ui.components.TaskState
 import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModel
 import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModelLogger
-import dev.ericd.todoey.usecases.fakes.FakeAddTaskUseCase
-import dev.ericd.todoey.usecases.fakes.FakeGetAllTasksUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -71,11 +69,9 @@ class TheTasksViewModel {
                 description = description.text,
             )
 
-            getAllTasks()
-
         }
 
-        val actual = viewModel.tasks
+        val actual = viewModel.tasks.value
 
         println("Actual: $actual")
 
@@ -116,7 +112,7 @@ class TheTasksViewModel {
         // Act
         viewModel.getAllTasks()
 
-        val actual = viewModel.tasks
+        val actual = viewModel.tasks.value
 
         println("Actual: $actual")
 

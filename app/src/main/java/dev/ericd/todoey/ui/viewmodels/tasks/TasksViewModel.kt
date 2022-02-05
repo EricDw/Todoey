@@ -1,24 +1,23 @@
 package dev.ericd.todoey.ui.viewmodels.tasks
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.core.tasks.TaskModel
 import dev.ericd.todoey.ui.components.TaskComponent
 import dev.ericd.todoey.ui.components.TaskState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 open class TasksViewModel(
     private val repository: Task.Repository
 ) : ViewModel() {
 
-    private var backingTasks: List<TaskComponent.State> by mutableStateOf(
+    private var backingTasks = MutableStateFlow<List<TaskComponent.State>>(
         emptyList()
     )
 
-    val tasks: List<TaskComponent.State>
+    val tasks: StateFlow<List<TaskComponent.State>>
         get() = backingTasks
 
     open fun getAllTasks() {
@@ -39,7 +38,7 @@ open class TasksViewModel(
         tasks: List<Task>
     ) {
 
-        backingTasks = tasks.map { theTask ->
+        backingTasks.value = tasks.map { theTask ->
             TaskState(
                 description = AnnotatedString(theTask.description),
             )
@@ -62,6 +61,8 @@ open class TasksViewModel(
         repository.insert(
             task
         )
+
+        getAllTasks()
 
     }
 
