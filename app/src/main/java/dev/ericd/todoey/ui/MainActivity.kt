@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
             )
         }
 
-        viewModel.getAllTasks()
+        viewModel.loadAllTasks()
 
     }
 

@@ -62,6 +62,8 @@ class TheTasksViewModel {
             )
         )
 
+        viewModel.loadAllTasks()
+
         // Act
         viewModel.addTask(
             description = description.text,
@@ -108,7 +110,9 @@ class TheTasksViewModel {
         )
 
         // Act
-        viewModel.getAllTasks()
+        viewModel.loadAllTasks()
+
+        dispatcher.scheduler.advanceUntilIdle()
 
         val actual = viewModel.tasks.value
 

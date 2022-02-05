@@ -24,16 +24,15 @@ open class TasksViewModel(
     val tasks: StateFlow<List<TaskComponent.State>>
         get() = backingTasks
 
-    private var taskJob: Job? =
-        repository.taskFlow
-        .onEach(::presentTasks)
-        .launchIn(viewModelScope)
+    private var taskLoader: Job? = null
 
-    open fun getAllTasks() {
+    open fun loadAllTasks() {
 
-        presentTasks(
-            repository.getAll()
-        )
+        taskLoader?.cancel()
+
+        taskLoader = repository.taskFlow
+            .onEach(::presentTasks)
+            .launchIn(viewModelScope)
 
     }
 
@@ -75,8 +74,8 @@ open class TasksViewModel(
 
     override fun onCleared() {
 
-        taskJob?.cancel()
-        taskJob = null
+        taskLoader?.cancel()
+        taskLoader = null
 
         super.onCleared()
 

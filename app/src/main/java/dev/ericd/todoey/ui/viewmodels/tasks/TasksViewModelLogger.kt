@@ -12,9 +12,9 @@ class TasksViewModelLogger(
 
     private val tag = TasksViewModel::class.simpleName
 
-    override fun getAllTasks() {
-        logger.logMessage("$tag: Getting all Tasks")
-        super.getAllTasks()
+    override fun loadAllTasks() {
+        logger.logMessage("$tag: Loading all Tasks")
+        super.loadAllTasks()
     }
 
     override fun presentFailure(
