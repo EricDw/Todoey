@@ -3,15 +3,13 @@ package dev.ericd.todoey.ui.viewmodels.factories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dev.ericd.todoey.common.logs.Logger
+import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModel
 import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModelLogger
-import dev.ericd.todoey.usecases.AddTaskUseCase
-import dev.ericd.todoey.usecases.GetAllTasksUseCase
 
 class TasksViewModelFactory(
-    private val getAllTasksUseCase: GetAllTasksUseCase,
-    private val addTaskUseCase: AddTaskUseCase,
-    private val logger: Logger
+    private val taskRepository: Task.Repository,
+    private val logger: Logger,
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
@@ -20,15 +18,13 @@ class TasksViewModelFactory(
 
             TasksViewModel::class.java       -> {
                 TasksViewModel(
-                    getAllTasksUseCase = getAllTasksUseCase,
-                    addTaskUseCase = addTaskUseCase,
+                    repository = taskRepository,
                 )
             }
 
             TasksViewModelLogger::class.java -> {
                 TasksViewModelLogger(
-                    getAllTasksUseCase = getAllTasksUseCase,
-                    addTaskUseCase = addTaskUseCase,
+                    repository = taskRepository,
                     logger = logger
                 )
             }

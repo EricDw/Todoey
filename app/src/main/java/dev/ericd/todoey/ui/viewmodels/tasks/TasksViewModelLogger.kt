@@ -2,16 +2,12 @@ package dev.ericd.todoey.ui.viewmodels.tasks
 
 import dev.ericd.todoey.common.logs.Logger
 import dev.ericd.todoey.core.tasks.Task
-import dev.ericd.todoey.usecases.AddTaskUseCase
-import dev.ericd.todoey.usecases.GetAllTasksUseCase
 
 class TasksViewModelLogger(
-    getAllTasksUseCase: GetAllTasksUseCase,
-    addTaskUseCase: AddTaskUseCase,
+    repository: Task.Repository,
     private val logger: Logger,
 ) : TasksViewModel(
-    getAllTasksUseCase = getAllTasksUseCase,
-    addTaskUseCase = addTaskUseCase
+    repository = repository
 ) {
 
     private val tag = TasksViewModel::class.simpleName

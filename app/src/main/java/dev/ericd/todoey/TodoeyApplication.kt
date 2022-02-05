@@ -4,24 +4,15 @@ import android.app.Application
 import dev.ericd.todoey.common.logs.Logger
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.data.repositories.TaskRepository
-import dev.ericd.todoey.usecases.AddTaskUseCase
-import dev.ericd.todoey.usecases.AddTaskUseCaseSync
-import dev.ericd.todoey.usecases.GetAllTasksUseCase
-import dev.ericd.todoey.usecases.GetAllTasksUseCaseSync
 
 class TodoeyApplication : Application() {
 
     companion object {
 
-        private var backingGetAllTasksUseCase: GetAllTasksUseCase? = null
+        private var backingTaskRepository: Task.Repository? = null
 
-        val getAllTasksUseCase: GetAllTasksUseCase
-            get() = backingGetAllTasksUseCase!!
-
-        private var backingAddTaskUseCase: AddTaskUseCase? = null
-
-        val addTaskUseCase: AddTaskUseCase
-            get() = backingAddTaskUseCase!!
+        val taskRepository: Task.Repository
+            get() = backingTaskRepository!!
 
         private var backingLogger: Logger? = null
 
@@ -30,24 +21,10 @@ class TodoeyApplication : Application() {
 
     }
 
-    private lateinit var tasksRepository: Task.Repository
-
     override fun onCreate() {
         super.onCreate()
 
-        tasksRepository = TaskRepository()
-
-        backingGetAllTasksUseCase = if (BuildConfig.DEBUG) {
-            GetAllTasksUseCaseSync(tasksRepository)
-        } else {
-            GetAllTasksUseCaseSync(tasksRepository)
-        }
-
-        backingAddTaskUseCase = if (BuildConfig.DEBUG) {
-            AddTaskUseCaseSync(tasksRepository)
-        } else {
-            AddTaskUseCaseSync(tasksRepository)
-        }
+        backingTaskRepository = TaskRepository()
 
         backingLogger = AndroidLogger()
 

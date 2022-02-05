@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import dev.ericd.todoey.R
 import dev.ericd.todoey.ui.components.*
 import dev.ericd.todoey.ui.theme.TodoeyTheme
+import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModel
 
 interface HomeScreen {
 

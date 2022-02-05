@@ -16,20 +16,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: TasksViewModel
 
-    private val state = HomeScreenState().apply {
-
-        extendedFABState = extendedFABState.copy(
-            onClickHandler = {
-
-                viewModel.addTask(
-                    description = "Buy Meat"
-                )
-
-                tasks = viewModel.tasks
-
-            }
-        )
-    }
+    private lateinit var state : HomeScreen.State
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +24,7 @@ class MainActivity : ComponentActivity() {
         val viewModelProvider = ViewModelProvider(
             this,
             TasksViewModelFactory(
-                TodoeyApplication.getAllTasksUseCase,
-                TodoeyApplication.addTaskUseCase,
+                TodoeyApplication.taskRepository,
                 TodoeyApplication.logger
             )
         )
@@ -50,6 +36,23 @@ class MainActivity : ComponentActivity() {
         }
 
         viewModel = viewModelProvider.get(modelClass)
+
+        state = HomeScreenState().apply {
+
+            extendedFABState = extendedFABState.copy(
+                onClickHandler = {
+
+                    viewModel.addTask(
+                        description = "Buy Meat"
+                    )
+
+                    viewModel.getAllTasks()
+
+                    tasks = viewModel.tasks
+
+                }
+            )
+        }
 
         setContent {
             HomeScreen(

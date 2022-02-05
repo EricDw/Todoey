@@ -3,15 +3,12 @@ package dev.ericd.todoey.viewmodels
 import androidx.compose.ui.text.AnnotatedString
 import dev.ericd.todoey.common.logs.TestLogger
 import dev.ericd.todoey.core.tasks.TaskModel
-import dev.ericd.todoey.core.tasks.fakes.FakeTask
+import dev.ericd.todoey.data.repositories.fakes.FakeTaskRepository
 import dev.ericd.todoey.ui.components.TaskState
 import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModel
 import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModelLogger
-import dev.ericd.todoey.usecases.AddTaskUseCase
-import dev.ericd.todoey.usecases.GetAllTasksUseCase
 import dev.ericd.todoey.usecases.fakes.FakeAddTaskUseCase
 import dev.ericd.todoey.usecases.fakes.FakeGetAllTasksUseCase
-import dev.ericd.todoey.usecases.logs.GetAllTasksUseCaseLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -26,11 +23,9 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class TheTasksViewModel {
 
+    private lateinit var taskRepository: FakeTaskRepository
+
     private lateinit var viewModel: TasksViewModel
-
-    private lateinit var getAllTasksUseCase: FakeGetAllTasksUseCase
-
-    private lateinit var addTaskUseCase: FakeAddTaskUseCase
 
     private lateinit var dispatcher: TestDispatcher
 
@@ -41,20 +36,12 @@ class TheTasksViewModel {
 
         Dispatchers.setMain(dispatcher)
 
-        getAllTasksUseCase = FakeGetAllTasksUseCase()
-
-        addTaskUseCase = FakeAddTaskUseCase()
+        taskRepository = FakeTaskRepository()
 
         val logger = TestLogger()
 
-        val caseLogger = GetAllTasksUseCaseLogger(
-            delegate = getAllTasksUseCase,
-            logger = logger
-        )
-
         viewModel = TasksViewModelLogger(
-            getAllTasksUseCase = caseLogger,
-            addTaskUseCase = addTaskUseCase,
+            repository = taskRepository,
             logger = logger
         )
 
@@ -77,20 +64,6 @@ class TheTasksViewModel {
             )
         )
 
-        addTaskUseCase.results = listOf(
-            AddTaskUseCase.Result.Complete
-        )
-
-        getAllTasksUseCase.results = listOf(
-            GetAllTasksUseCase.Result.Loaded(
-                listOf(
-                    FakeTask(
-                        description = description.text
-                    )
-                )
-            )
-        )
-
         // Act
         viewModel.apply {
 
@@ -101,8 +74,6 @@ class TheTasksViewModel {
             getAllTasks()
 
         }
-
-        dispatcher.scheduler.advanceUntilIdle()
 
         val actual = viewModel.tasks
 
@@ -128,11 +99,7 @@ class TheTasksViewModel {
             ),
         )
 
-        getAllTasksUseCase.results = listOf(
-            GetAllTasksUseCase.Result.Loaded(
-                tasks = tasks
-            ),
-        )
+        tasks.forEach(taskRepository::insert)
 
         val expected = listOf(
             TaskState(
@@ -148,8 +115,6 @@ class TheTasksViewModel {
 
         // Act
         viewModel.getAllTasks()
-
-//        dispatcher.scheduler.advanceUntilIdle()
 
         val actual = viewModel.tasks
 
