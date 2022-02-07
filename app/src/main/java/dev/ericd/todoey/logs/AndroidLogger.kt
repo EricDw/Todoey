@@ -1,4 +1,4 @@
-package dev.ericd.todoey
+package dev.ericd.todoey.logs
 
 import android.util.Log
 import dev.ericd.todoey.common.logs.Logger

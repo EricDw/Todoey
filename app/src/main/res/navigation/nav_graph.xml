@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeScreenFragment">
+
+    <fragment
+        android:id="@+id/homeScreenFragment"
+        android:name="dev.ericd.todoey.controllers.HomeScreenFragment"
+        android:label="HomeScreenFragment" >
+        <action
+            android:id="@+id/action_homeScreenFragment_to_addTaskScreenFragment2"
+            app:destination="@id/addTaskScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTaskScreenFragment"
+        android:name="dev.ericd.todoey.controllers.AddTaskScreenFragment"
+        android:label="AddTaskScreenFragment" />
+</navigation>

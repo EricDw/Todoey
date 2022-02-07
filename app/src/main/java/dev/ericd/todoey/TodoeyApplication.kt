@@ -4,6 +4,7 @@ import android.app.Application
 import dev.ericd.todoey.common.logs.Logger
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.data.repositories.TaskRepository
+import dev.ericd.todoey.logs.AndroidLogger
 
 class TodoeyApplication : Application() {
 
