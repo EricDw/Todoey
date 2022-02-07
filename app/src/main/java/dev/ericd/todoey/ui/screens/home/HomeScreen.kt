@@ -31,9 +31,7 @@ interface HomeScreen {
 
 class HomeScreenState : HomeScreen.State {
 
-    override var tasks: List<TaskComponent.State> by mutableStateOf(
-        emptyList()
-    )
+    override val tasks: MutableList<TaskComponent.State> = mutableStateListOf()
 
     override var extendedFABState: ExtendedFABComponentState by mutableStateOf(
         ExtendedFABComponentState(
@@ -104,9 +102,11 @@ fun HomeScreenPreview() {
 
     val state = remember {
         HomeScreenState().apply {
-            tasks = listOf(
-                TaskState(
-                    description = AnnotatedString("Buy Milk")
+            tasks.addAll(
+                listOf(
+                    TaskState(
+                        description = AnnotatedString("Buy Milk")
+                    )
                 )
             )
         }

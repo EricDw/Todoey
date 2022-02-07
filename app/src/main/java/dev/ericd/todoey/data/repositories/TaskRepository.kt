@@ -16,12 +16,17 @@ class TaskRepository : Task.Repository {
     override val taskFlow: StateFlow<List<Task>> =
         backingTaskFlow.asStateFlow()
 
-    override fun getAll(): List<Task> {
+    override suspend fun insert(entity: Task) {
+        taskMap[entity.id] = entity
+        backingTaskFlow.value = taskMap.values.toList()
+    }
+
+    override suspend fun getAll(): List<Task> {
         return taskMap.values.toList()
     }
 
-    override fun insert(entity: Task) {
-        taskMap[entity.id] = entity
+    override suspend fun delete(entity: Task) {
+        taskMap.remove(entity.id)
         backingTaskFlow.value = taskMap.values.toList()
     }
 

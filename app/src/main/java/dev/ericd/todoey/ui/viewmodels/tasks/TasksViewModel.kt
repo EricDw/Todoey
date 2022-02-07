@@ -8,10 +8,8 @@ import dev.ericd.todoey.core.tasks.TaskModel
 import dev.ericd.todoey.ui.components.TaskComponent
 import dev.ericd.todoey.ui.components.TaskState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 open class TasksViewModel(
     private val repository: Task.Repository
@@ -21,8 +19,8 @@ open class TasksViewModel(
         emptyList()
     )
 
-    val tasks: StateFlow<List<TaskComponent.State>>
-        get() = backingTasks
+    val tasks: StateFlow<List<TaskComponent.State>> =
+        backingTasks.asStateFlow()
 
     private var taskLoader: Job? = null
 
@@ -46,29 +44,51 @@ open class TasksViewModel(
         tasks: List<Task>
     ) {
 
-        backingTasks.value = tasks.map { theTask ->
+        backingTasks.value = mapTasksToUIState(tasks)
+
+    }
+
+    protected open fun mapTasksToUIState(
+        tasks: List<Task>
+    ): List<TaskState> {
+        return tasks.map { theTask ->
+
             TaskState(
                 description = AnnotatedString(theTask.description),
-            )
-        }
+            ).apply {
 
+                deleteEnabled = true
+
+                onDeleteClickHandler = {
+                    viewModelScope.launch {
+                        repository.delete(theTask)
+                    }
+                }
+
+            }
+
+        }
     }
 
     protected open fun presentLoading() {
 
     }
 
-    fun addTask(
+    open fun addTask(
         description: String,
     ) {
 
-        val task = TaskModel(
-            description = description,
-        )
+        viewModelScope.launch {
 
-        repository.insert(
-            task
-        )
+            val task = TaskModel(
+                description = description,
+            )
+
+            repository.insert(
+                task
+            )
+
+        }
 
     }
 

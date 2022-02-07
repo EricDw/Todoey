@@ -41,14 +41,9 @@ class MainActivity : ComponentActivity() {
 
         viewModel = viewModelProvider.get(modelClass)
 
-        viewModel.tasks.onEach { newTasks ->
-            if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED))
-                state.tasks = newTasks
-        }.launchIn(lifecycleScope)
-
         state = HomeScreenState().apply {
 
-            tasks = viewModel.tasks.value
+            tasks.addAll(viewModel.tasks.value)
 
             extendedFABState = extendedFABState.copy(
                 onClickHandler = {
@@ -60,6 +55,16 @@ class MainActivity : ComponentActivity() {
                 }
             )
         }
+
+
+        viewModel.tasks.onEach { newTasks ->
+            if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+
+                state.tasks.clear()
+                state.tasks.addAll(newTasks)
+            }
+        }.launchIn(lifecycleScope)
+
 
         setContent {
             HomeScreen(
