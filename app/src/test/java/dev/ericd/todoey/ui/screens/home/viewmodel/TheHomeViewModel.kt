@@ -1,4 +1,4 @@
-package dev.ericd.todoey.viewmodels
+package dev.ericd.todoey.ui.screens.home.viewmodel
 
 import androidx.compose.ui.text.AnnotatedString
 import dev.ericd.todoey.common.logs.TestLogger
@@ -7,8 +7,6 @@ import dev.ericd.todoey.core.tasks.TaskModel
 import dev.ericd.todoey.core.tasks.fakes.FakeTask
 import dev.ericd.todoey.data.repositories.fakes.FakeTaskRepository
 import dev.ericd.todoey.ui.components.TaskState
-import dev.ericd.todoey.ui.screens.home.viewmodel.HomeViewModel
-import dev.ericd.todoey.ui.screens.home.viewmodel.HomeViewModelLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
