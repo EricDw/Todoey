@@ -21,6 +21,8 @@ interface HomeScreen {
 
     interface State {
 
+        val topBarState: TopBarComponent.State
+
         val tasks: List<TaskComponent.State>
 
         val extendedFABState: FABComponent.State.Extended
@@ -29,30 +31,63 @@ interface HomeScreen {
 
 }
 
-class HomeScreenState : HomeScreen.State {
+class HomeScreenState(
+    initializer: HomeScreenState.() -> Unit = {}
+) : HomeScreen.State {
+
+    override val topBarState = TopBarComponentState {
+
+        titleId = R.string.app_name
+
+        actions += listOf(
+            IconButtonComponentState {
+
+                iconId = R.drawable.ic_baseline_settings_24
+
+                descriptionId = R.string.description_to_settings
+
+            }
+        )
+
+    }
 
     override val tasks: MutableList<TaskComponent.State> = mutableStateListOf()
 
     override var extendedFABState: ExtendedFABComponentState by mutableStateOf(
-        ExtendedFABComponentState(
-            iconId = R.drawable.ic_baseline_add_task_24,
-            textId = R.string.label_add_task,
+
+        ExtendedFABComponentState {
+
+            iconId = R.drawable.ic_baseline_add_task_24
+
+            textId = R.string.label_add_task
+
             isEnabled = true
-        )
+
+        }
+
     )
+
+    init {
+        initializer()
+    }
+
 }
 
 @Composable
 fun HomeScreen(
-    state: HomeScreen.State = remember {
-        HomeScreenState()
-    }
+    state: HomeScreen.State
 ) {
     TodoeyTheme {
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
+            topBar = {
+                TopBarComponent(
+                    state = state.topBarState
+                )
+            },
             floatingActionButton = {
+
                 AnimatedVisibility(
                     visible = state.extendedFABState.isEnabled
                 ) {
@@ -92,8 +127,11 @@ fun HomeScreen(
                 }
 
             }
+
         }
+
     }
+
 }
 
 @Preview(showSystemUi = true, showBackground = true)
@@ -104,9 +142,9 @@ fun HomeScreenPreview() {
         HomeScreenState().apply {
             tasks.addAll(
                 listOf(
-                    TaskState(
-                        description = AnnotatedString("Buy Milk")
-                    )
+                    TaskState {
+                        details = AnnotatedString("Buy Milk")
+                    }
                 )
             )
         }

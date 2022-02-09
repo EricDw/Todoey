@@ -4,7 +4,8 @@ import dev.ericd.todoey.core.tasks.Task
 import kotlinx.coroutines.flow.StateFlow
 
 data class FakeTask(
-    override val description: String,
+    override val title: String = "",
+    override val details: String = "",
     override val id: Task.Id = Task.Id()
 ): Task {
 

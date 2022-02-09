@@ -11,15 +11,15 @@ import dev.ericd.todoey.R
 import dev.ericd.todoey.TodoeyApplication
 import dev.ericd.todoey.ui.screens.home.HomeScreen
 import dev.ericd.todoey.ui.screens.home.HomeScreenState
-import dev.ericd.todoey.ui.viewmodels.factories.TasksViewModelFactory
-import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModel
-import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModelLogger
+import dev.ericd.todoey.ui.screens.home.viewmodel.factory.HomeViewModelFactory
+import dev.ericd.todoey.ui.screens.home.viewmodel.HomeViewModel
+import dev.ericd.todoey.ui.screens.home.viewmodel.HomeViewModelLogger
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 class HomeScreenFragment : ComposeFragment() {
 
-    private lateinit var viewModel: TasksViewModel
+    private lateinit var viewModel: HomeViewModel
 
     private lateinit var state: HomeScreenState
 
@@ -28,38 +28,36 @@ class HomeScreenFragment : ComposeFragment() {
 
         val viewModelProvider = ViewModelProvider(
             this,
-            TasksViewModelFactory(
+            HomeViewModelFactory(
                 TodoeyApplication.taskRepository,
                 TodoeyApplication.logger
             )
         )
 
         val modelClass = if (BuildConfig.DEBUG) {
-            TasksViewModelLogger::class.java
+            HomeViewModelLogger::class.java
         } else {
-            TasksViewModel::class.java
+            HomeViewModel::class.java
         }
 
         viewModel = viewModelProvider.get(modelClass)
 
-        state = HomeScreenState().apply {
+        state = HomeScreenState {
 
             tasks.addAll(viewModel.tasks.value)
 
-            extendedFABState = extendedFABState.copy(
-                onClickHandler = {
+            extendedFABState.clickHandler = {
 
-                    findNavController().navigate(
-                        R.id.action_homeScreenFragment_to_addTaskScreenFragment2
-                    )
+                findNavController().navigate(
+                    R.id.action_homeScreenFragment_to_addTaskScreenFragment2
+                )
 
-                }
-            )
+            }
+
         }
 
         viewModel.tasks.onEach { newTasks ->
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-
                 state.tasks.clear()
                 state.tasks.addAll(newTasks)
             }

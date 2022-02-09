@@ -1,26 +1,26 @@
-package dev.ericd.todoey.ui.viewmodels.tasks
+package dev.ericd.todoey.ui.screens.home.viewmodel
 
 import dev.ericd.todoey.common.logs.Logger
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.ui.components.TaskState
 
-class TasksViewModelLogger(
+class HomeViewModelLogger(
     repository: Task.Repository,
     private val logger: Logger,
-) : TasksViewModel(
+) : HomeViewModel(
     repository = repository
 ) {
 
-    private val tag = TasksViewModel::class.simpleName
+    private val tag = HomeViewModel::class.simpleName
 
     override fun loadAllTasks() {
         logger.logMessage("$tag: Loading all Tasks")
         super.loadAllTasks()
     }
 
-    override fun addTask(description: String) {
+    override fun addTask(details: String) {
         logger.logMessage("$tag: Adding a Task")
-        super.addTask(description)
+        super.addTask(details)
     }
 
     override fun presentFailure(
@@ -46,10 +46,10 @@ class TasksViewModelLogger(
         logger.logMessage("$tag: Mapping Tasks to TaskStates")
         return super.mapTasksToUIState(tasks).map { taskState ->
 
-            val originalHandler = taskState.onDeleteClickHandler
+            val originalHandler = taskState.deleteButtonState.clickHandler
 
             taskState.apply {
-                onDeleteClickHandler = {
+                taskState.deleteButtonState.clickHandler = {
                     logger.logMessage("$tag: Delete Task Clicked")
                     originalHandler()
                 }

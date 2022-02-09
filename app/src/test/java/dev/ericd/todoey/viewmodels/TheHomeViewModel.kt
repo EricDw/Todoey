@@ -7,8 +7,8 @@ import dev.ericd.todoey.core.tasks.TaskModel
 import dev.ericd.todoey.core.tasks.fakes.FakeTask
 import dev.ericd.todoey.data.repositories.fakes.FakeTaskRepository
 import dev.ericd.todoey.ui.components.TaskState
-import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModel
-import dev.ericd.todoey.ui.viewmodels.tasks.TasksViewModelLogger
+import dev.ericd.todoey.ui.screens.home.viewmodel.HomeViewModel
+import dev.ericd.todoey.ui.screens.home.viewmodel.HomeViewModelLogger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
@@ -19,11 +19,11 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TheTasksViewModel {
+class TheHomeViewModel {
 
     private lateinit var taskRepository: Task.Repository
 
-    private lateinit var viewModel: TasksViewModel
+    private lateinit var viewModel: HomeViewModel
 
     private lateinit var dispatcher: TestDispatcher
 
@@ -38,7 +38,7 @@ class TheTasksViewModel {
 
         val logger = TestLogger()
 
-        viewModel = TasksViewModelLogger(
+        viewModel = HomeViewModelLogger(
             repository = taskRepository,
             logger = logger
         )
@@ -57,16 +57,18 @@ class TheTasksViewModel {
         val description = AnnotatedString("Buy Meat")
 
         val expected = listOf(
-            TaskState(
-                description = description
-            )
+            TaskState {
+
+                this.details = description
+
+            }
         )
 
         viewModel.loadAllTasks()
 
         // Act
         viewModel.addTask(
-            description = description.text,
+            details = description.text,
         )
 
         dispatcher.scheduler.advanceUntilIdle()
@@ -100,15 +102,15 @@ class TheTasksViewModel {
         }
 
         val expected = listOf(
-            TaskState(
-                description = AnnotatedString("Buy Meat")
-            ),
-            TaskState(
-                description = AnnotatedString("Buy Dairy")
-            ),
-            TaskState(
-                description = AnnotatedString("Buy Spices")
-            ),
+            TaskState {
+                details = AnnotatedString("Buy Meat")
+            },
+            TaskState {
+                details = AnnotatedString("Buy Dairy")
+            },
+            TaskState {
+                details = AnnotatedString("Buy Spices")
+            },
         )
 
         // Act
@@ -146,11 +148,11 @@ class TheTasksViewModel {
 
         assertTrue(
             "Deletion is expected to be enabled",
-            viewModel.tasks.value.first().deleteEnabled
+            viewModel.tasks.value.first().deleteButtonState.isEnabled
         )
 
         // Act
-        viewModel.tasks.value.first().onDeleteClickHandler()
+        viewModel.tasks.value.first().deleteButtonState.clickHandler()
 
         dispatcher.scheduler.advanceUntilIdle()
 

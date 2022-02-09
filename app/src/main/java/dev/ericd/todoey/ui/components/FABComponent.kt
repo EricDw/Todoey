@@ -15,11 +15,7 @@ import dev.ericd.todoey.R
 
 interface FABComponent {
 
-    interface State {
-        val iconId: Int
-        val iconDescriptionId: Int
-        val onClickHandler: () -> Unit
-        val isEnabled: Boolean
+    interface State: IconButtonComponent.State {
 
         interface Extended : State {
             val textId: Int
@@ -29,27 +25,47 @@ interface FABComponent {
 
 }
 
-data class ExtendedFABComponentState(
-    override val iconId: Int = R.drawable.ic_launcher_foreground,
-    override val iconDescriptionId: Int = R.string.empty,
-    override var textId: Int = R.string.empty,
-    override val isEnabled: Boolean = false,
-    override val onClickHandler: () -> Unit = {
-        TODO("Not Implemented")
-    },
-) : FABComponent.State.Extended
+ class ExtendedFABComponentState(
+    initializer: ExtendedFABComponentState.() -> Unit = {}
+) : FABComponent.State.Extended {
+
+    override var iconId by mutableStateOf(
+        R.drawable.ic_launcher_foreground
+    )
+
+     override val descriptionId by mutableStateOf(
+        R.string.empty
+    )
+
+    override var textId by mutableStateOf(
+        R.string.empty
+    )
+
+    override var isEnabled by mutableStateOf(
+        false
+    )
+
+    override var clickHandler by mutableStateOf(
+        {}
+    )
+
+    init {
+        initializer()
+    }
+
+}
 
 @Composable
 fun ExtendedFABComponent(
     state: FABComponent.State.Extended
 ) {
     ExtendedFloatingActionButton(
-        onClick = state.onClickHandler,
+        onClick = state.clickHandler,
         icon = {
 
             Icon(
                 painter = painterResource(id = state.iconId),
-                contentDescription = stringResource(id = state.iconDescriptionId)
+                contentDescription = stringResource(id = state.descriptionId)
             )
 
         },
@@ -66,10 +82,15 @@ fun ExtendedFABComponent(
 fun ExtendedFABComponentPreview() {
 
     val state = remember {
-        ExtendedFABComponentState(
-            iconId = R.drawable.ic_baseline_add_task_24,
+
+        ExtendedFABComponentState {
+
+            iconId = R.drawable.ic_baseline_add_task_24
+
             textId = R.string.label_add_task
-        )
+
+        }
+
     }
 
     Box(

@@ -1,4 +1,4 @@
-package dev.ericd.todoey.ui.viewmodels.tasks
+package dev.ericd.todoey.ui.screens.home.viewmodel
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-open class TasksViewModel(
+open class HomeViewModel(
     private val repository: Task.Repository
 ) : ViewModel() {
 
@@ -53,16 +53,22 @@ open class TasksViewModel(
     ): List<TaskState> {
         return tasks.map { theTask ->
 
-            TaskState(
-                description = AnnotatedString(theTask.description),
-            ).apply {
+            TaskState {
 
-                deleteEnabled = true
+                title = AnnotatedString(theTask.title)
 
-                onDeleteClickHandler = {
+                details = AnnotatedString(theTask.details)
+
+                deleteButtonState.isEnabled = true
+
+                deleteButtonState.clickHandler = {
+
                     viewModelScope.launch {
+
                         repository.delete(theTask)
+
                     }
+
                 }
 
             }
@@ -75,13 +81,13 @@ open class TasksViewModel(
     }
 
     open fun addTask(
-        description: String,
+        details: String,
     ) {
 
         viewModelScope.launch {
 
             val task = TaskModel(
-                description = description,
+                details = details,
             )
 
             repository.insert(

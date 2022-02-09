@@ -1,12 +1,13 @@
 package dev.ericd.todoey.ui.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Checkbox
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,36 +18,61 @@ interface TaskComponent {
 
     interface State {
 
-        val description: AnnotatedString
+        val title: AnnotatedString
+
+        val details: AnnotatedString
+
         val completed: Boolean
 
-        val deleteIconId: Int
-        val deleteIconDescriptionId: Int
-        val deleteEnabled: Boolean
+        val deleteButtonState: IconButtonComponent.State
 
         val onCompletedChangeHandler: ((Boolean) -> Unit)?
-        val onDeleteClickHandler: () -> Unit
 
     }
 
 }
 
-data class TaskState(
-    override val description: AnnotatedString = AnnotatedString(""),
-    override val completed: Boolean = false,
-    override val deleteIconId: Int = R.drawable.ic_baseline_delete_24,
-    override val deleteIconDescriptionId: Int = R.string.description_delete_task,
+class TaskState(
+    initializer: TaskState.() -> Unit = {}
 ) : TaskComponent.State {
 
-    override var deleteEnabled: Boolean by mutableStateOf(
+    override var title: AnnotatedString by mutableStateOf(
+        AnnotatedString("")
+    )
+
+    override var details: AnnotatedString by mutableStateOf(
+        AnnotatedString("")
+    )
+
+    override var completed: Boolean by mutableStateOf(
         false
     )
 
-    override var onCompletedChangeHandler: ((Boolean) -> Unit)? =
-        null
+    override val deleteButtonState = IconButtonComponentState {
 
-    override var onDeleteClickHandler: () -> Unit = { }
+        iconId = R.drawable.ic_baseline_delete_24
 
+        descriptionId = R.string.description_delete_task
+
+    }
+
+    override var onCompletedChangeHandler: ((Boolean) -> Unit)? by
+    mutableStateOf(null)
+
+    init {
+        initializer()
+    }
+
+    override fun equals(other: Any?): Boolean {
+
+        if (other === this) return true
+        if (other !is TaskComponent.State) return false
+        if (other.completed != completed) return false
+        if (other.details != details) return false
+
+        return true
+
+    }
 }
 
 @Composable
@@ -61,36 +87,33 @@ fun TaskCardComponent(
         Box(
             modifier = Modifier.padding(16.dp),
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                Checkbox(
-                    checked = state.completed,
-                    onCheckedChange = state.onCompletedChangeHandler
-                )
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Text(
-                    text = state.description
-                )
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                IconButton(
-                    onClick = state.onDeleteClickHandler,
-                    enabled = state.deleteEnabled
+            Column(Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
-                    Icon(
-                        painter = painterResource(id = state.deleteIconId),
-                        contentDescription = stringResource(id = state.deleteIconDescriptionId)
+                    Checkbox(
+                        checked = state.completed,
+                        onCheckedChange = state.onCompletedChangeHandler
                     )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Text(
+                        text = state.title
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    IconButtonComponent(state = state.deleteButtonState)
+
                 }
 
+                Row(Modifier.fillMaxWidth()) {
+                    Text(text = state.details)
+                }
             }
         }
     }
@@ -101,9 +124,10 @@ fun TaskCardComponent(
 fun DefaultPreview() {
 
     val state = remember {
-        TaskState(
-            description = AnnotatedString("Buy Milk")
-        )
+        TaskState {
+            title = AnnotatedString("Buy Milk")
+            details = AnnotatedString("From the store")
+        }
     }
 
     TodoeyTheme {

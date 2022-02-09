@@ -9,7 +9,9 @@ interface Task {
 
     val id: Id
 
-    val description: String
+    val title: String
+
+    val details: String
 
     val isComplete: StateFlow<Boolean>
 

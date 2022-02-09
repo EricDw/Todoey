@@ -4,7 +4,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 data class TaskModel(
-    override val description: String = "",
+    override val title: String = "",
+    override val details: String = "",
     override val id: Task.Id = Task.Id()
 ) : Task {
 
