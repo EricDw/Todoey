@@ -25,6 +25,22 @@ open class AddTaskViewModel(
 
     private val backingState = AddTaskScreenState {
 
+        topBarState.navigationButtonState =
+            IconButtonComponentState {
+
+                iconId = R.drawable.ic_baseline_arrow_back_24
+
+                isEnabled = true
+
+                clickHandler = {
+                    viewModelScope.launch {
+                        backingSideEffects.emit(
+                            AddTaskScreen.SideEffect.NavigateBack
+                        )
+                    }
+                }
+            }
+
         topBarState.actions += listOf(
             IconButtonComponentState {
 

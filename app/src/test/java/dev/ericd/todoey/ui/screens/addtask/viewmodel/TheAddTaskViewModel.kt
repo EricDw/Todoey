@@ -1,6 +1,7 @@
 package dev.ericd.todoey.ui.screens.addtask.viewmodel
 
 import androidx.compose.ui.text.input.TextFieldValue
+import dev.ericd.todoey.R
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.data.repositories.fakes.FakeTaskRepository
 import dev.ericd.todoey.ui.screens.addtask.AddTaskScreen
@@ -156,5 +157,45 @@ class TheAddTaskViewModel {
 
     }
 
+    @Test
+    fun `Can navigate back via the navigation button`() = runTest {
+        // Arrange
+        val expected = AddTaskScreen.SideEffect.NavigateBack
+
+        var actual: AddTaskScreen.SideEffect? = null
+
+        val theNavigationButton = viewModel.state.topBarState.navigationButtonState!!
+
+        assertTrue(
+            "The navigation button is enabled",
+            theNavigationButton.isEnabled
+        )
+
+        // Act
+        viewModel.sideEffects.take(1).onEach {
+            actual = it
+        }.launchIn(this)
+
+        theNavigationButton.clickHandler()
+
+        dispatcher.scheduler.advanceUntilIdle()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Navigation button has correct image`() = runTest {
+        // Arrange
+        val expected = R.drawable.ic_baseline_arrow_back_24
+
+        val theNavigationButton = viewModel.state.topBarState.navigationButtonState!!
+
+        // Act
+        val actual = theNavigationButton.iconId
+
+        // Assert
+        assertEquals(expected, actual)
+    }
 
 }
