@@ -32,7 +32,15 @@ open class AddTaskViewModel(
 
                 descriptionId = R.string.description_save_task
 
-                isEnabled = true
+                isEnabled = titleValue.text.isNotBlank()
+
+                titleValueChangeHandler = { newValue ->
+
+                    titleValue = newValue
+
+                    isEnabled = newValue.text.isNotBlank()
+
+                }
 
                 clickHandler = {
 

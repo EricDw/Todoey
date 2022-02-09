@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.*
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -116,5 +115,46 @@ class TheAddTaskViewModel {
         // Assert
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun `Can not save a Task with no title`() = runTest {
+        // Arrange
+        val theSaveButton = viewModel.state.topBarState.actions.first()
+
+        assertFalse(
+            "The save button starts out as disabled",
+            theSaveButton.isEnabled
+        )
+
+        // Act & Assert
+        viewModel.state.run {
+
+            titleValueChangeHandler(
+                TextFieldValue(
+                    "Hello"
+                )
+            )
+
+            assertTrue(
+                "The save button is enabled",
+                theSaveButton.isEnabled
+            )
+
+            titleValueChangeHandler(
+                TextFieldValue(
+                    ""
+                )
+            )
+
+
+            assertFalse(
+                "The save button is disabled",
+                theSaveButton.isEnabled
+            )
+
+        }
+
+    }
+
 
 }
