@@ -1,4 +1,4 @@
-package dev.ericd.todoey.controllers
+package dev.ericd.todoey.ui.screens.home.controller
 
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dev.ericd.todoey.BuildConfig
 import dev.ericd.todoey.R
-import dev.ericd.todoey.TodoeyApplication
+import dev.ericd.todoey.controllers.TodoeyApplication
+import dev.ericd.todoey.controllers.ComposeFragment
 import dev.ericd.todoey.ui.screens.home.HomeScreen
 import dev.ericd.todoey.ui.screens.home.HomeScreenState
 import dev.ericd.todoey.ui.screens.home.viewmodel.factory.HomeViewModelFactory

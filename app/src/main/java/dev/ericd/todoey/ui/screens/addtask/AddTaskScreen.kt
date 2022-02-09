@@ -40,6 +40,12 @@ interface AddTaskScreen {
 
     }
 
+    sealed class SideEffect {
+
+        object NavigateBack: SideEffect()
+
+    }
+
 }
 
 class AddTaskScreenState(

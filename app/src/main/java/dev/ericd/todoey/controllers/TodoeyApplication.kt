@@ -1,4 +1,4 @@
-package dev.ericd.todoey
+package dev.ericd.todoey.controllers
 
 import android.app.Application
 import dev.ericd.todoey.common.logs.Logger

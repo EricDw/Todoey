@@ -3,8 +3,12 @@ package dev.ericd.todoey.ui.screens.addtask.viewmodel
 import androidx.compose.ui.text.input.TextFieldValue
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.data.repositories.fakes.FakeTaskRepository
+import dev.ericd.todoey.ui.screens.addtask.AddTaskScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -86,5 +90,31 @@ class TheAddTaskViewModel {
         // Assert
         assertEquals(expected, actual)
     }
-    
+
+    @Test
+    fun `Emits NavigateBack SideEffect upon save`() = runTest {
+        // Arrange
+        val expected = AddTaskScreen.SideEffect.NavigateBack
+
+        var actual: AddTaskScreen.SideEffect? = null
+
+        viewModel.sideEffects.take(1).onEach {
+            actual = it
+        }.launchIn(this)
+
+        // Act
+        viewModel.state.run {
+
+            titleValueChangeHandler(TextFieldValue("Hello"))
+
+            topBarState.actions.first().clickHandler()
+
+        }
+
+        dispatcher.scheduler.advanceUntilIdle()
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
 }

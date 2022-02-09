@@ -8,11 +8,20 @@ import dev.ericd.todoey.core.tasks.TaskModel
 import dev.ericd.todoey.ui.components.IconButtonComponentState
 import dev.ericd.todoey.ui.screens.addtask.AddTaskScreen
 import dev.ericd.todoey.ui.screens.addtask.AddTaskScreenState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 open class AddTaskViewModel(
     private val repository: Task.Repository
 ) : ViewModel() {
+
+    private val backingSideEffects =
+        MutableSharedFlow<AddTaskScreen.SideEffect>()
+
+    val sideEffects: Flow<AddTaskScreen.SideEffect> =
+        backingSideEffects.asSharedFlow()
 
     private val backingState = AddTaskScreenState {
 
@@ -35,6 +44,10 @@ open class AddTaskViewModel(
                         )
 
                         repository.insert(task)
+
+                        backingSideEffects.emit(
+                            AddTaskScreen.SideEffect.NavigateBack
+                        )
 
                     }
 

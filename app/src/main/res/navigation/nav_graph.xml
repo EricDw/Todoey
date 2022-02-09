@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/homeScreenFragment"
-        android:name="dev.ericd.todoey.controllers.HomeScreenFragment"
+        android:name="dev.ericd.todoey.ui.screens.home.controller.HomeScreenFragment"
         android:label="HomeScreenFragment" >
         <action
             android:id="@+id/action_homeScreenFragment_to_addTaskScreenFragment2"
@@ -14,6 +14,6 @@
     </fragment>
     <fragment
         android:id="@+id/addTaskScreenFragment"
-        android:name="dev.ericd.todoey.controllers.AddTaskScreenFragment"
+        android:name="dev.ericd.todoey.ui.screens.addtask.controller.AddTaskScreenFragment"
         android:label="AddTaskScreenFragment" />
 </navigation>
