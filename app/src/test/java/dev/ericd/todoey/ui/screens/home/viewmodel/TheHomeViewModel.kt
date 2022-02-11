@@ -101,13 +101,13 @@ class TheHomeViewModel {
 
         val expected = listOf(
             TaskState {
-                details = AnnotatedString("Buy Meat")
+                title = AnnotatedString("Buy Meat")
             },
             TaskState {
-                details = AnnotatedString("Buy Dairy")
+                title = AnnotatedString("Buy Dairy")
             },
             TaskState {
-                details = AnnotatedString("Buy Spices")
+                title = AnnotatedString("Buy Spices")
             },
         )
 

@@ -18,7 +18,10 @@ import dev.ericd.todoey.R
 import dev.ericd.todoey.ui.components.IconButtonComponentState
 import dev.ericd.todoey.ui.components.TopBarComponent
 import dev.ericd.todoey.ui.components.TopBarComponentState
+import dev.ericd.todoey.ui.resource.ImageResource
+import dev.ericd.todoey.ui.resource.StringResource
 import dev.ericd.todoey.ui.theme.TodoeyTheme
+import kotlinx.coroutines.flow.Flow
 
 interface AddTaskScreen {
 
@@ -42,7 +45,15 @@ interface AddTaskScreen {
 
     sealed class SideEffect {
 
-        object NavigateBack: SideEffect()
+        object NavigateBack : SideEffect()
+
+    }
+
+    interface ViewModel {
+
+        val state: State
+
+        val sideEffects: Flow<SideEffect>
 
     }
 
@@ -56,19 +67,23 @@ class AddTaskScreenState(
 
         navigationButtonState = IconButtonComponentState().apply {
 
-            iconId = R.drawable.ic_baseline_arrow_back_24
+            iconResource = ImageResource.Id(
+                R.drawable.ic_baseline_arrow_back_24
+            )
 
-            descriptionId = R.string.description_go_back
+            descriptionResource = StringResource.Id(
+                R.string.description_go_back
+            )
 
         }
 
-        titleId = R.string.label_add_task
+        titleResource = StringResource.Id(R.string.label_add_task)
 
     }
 
     override var titleLabelId: Int by mutableStateOf(
-            R.string.label_title
-        )
+        R.string.label_title
+    )
 
     override var titleValue: TextFieldValue by mutableStateOf(
         TextFieldValue()

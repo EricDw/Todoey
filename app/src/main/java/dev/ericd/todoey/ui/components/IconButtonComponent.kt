@@ -9,14 +9,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import dev.ericd.todoey.R
+import dev.ericd.todoey.ui.resource.ImageResource
+import dev.ericd.todoey.ui.resource.StringResource
 
 interface IconButtonComponent {
 
     interface State {
 
-        val iconId: Int
+        val iconResource: ImageResource
 
-        val descriptionId: Int
+        val descriptionResource: StringResource
 
         val isEnabled: Boolean
 
@@ -30,12 +32,16 @@ class IconButtonComponentState(
     initializer: IconButtonComponentState.() -> Unit = {}
 ) : IconButtonComponent.State {
 
-    override var iconId: Int by mutableStateOf(
-        R.drawable.ic_baseline_image_24
+    override var iconResource: ImageResource by mutableStateOf(
+        ImageResource.Id(
+            R.drawable.ic_baseline_image_24
+        )
     )
 
-    override var descriptionId: Int by mutableStateOf(
-        R.string.empty
+    override var descriptionResource: StringResource by mutableStateOf(
+        StringResource.Id(
+            R.string.empty
+        )
     )
 
     override var isEnabled: Boolean by mutableStateOf(
@@ -63,12 +69,39 @@ fun IconButtonComponent(
         enabled = state.isEnabled,
     ) {
 
-        Icon(
-            painter = painterResource(id = state.iconId),
-            contentDescription = stringResource(
-                id = state.descriptionId
-            )
-        )
+        val description = when (val resource = state.descriptionResource) {
+
+            is StringResource.String -> {
+                resource.value
+            }
+
+            is StringResource.Id -> {
+                stringResource(id = resource.value)
+            }
+
+        }
+
+        when (val resource = state.iconResource) {
+
+            is ImageResource.Bitmap -> {
+
+                Icon(
+                    resource.value,
+                    contentDescription = description
+                )
+
+            }
+
+            is ImageResource.Id -> {
+
+                Icon(
+                    painter = painterResource(id = resource.value),
+                    contentDescription = description
+                )
+
+            }
+
+        }
 
     }
 

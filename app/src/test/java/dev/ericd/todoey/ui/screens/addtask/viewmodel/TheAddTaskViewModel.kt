@@ -4,6 +4,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import dev.ericd.todoey.R
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.data.repositories.fakes.FakeTaskRepository
+import dev.ericd.todoey.ui.resource.ImageResource
 import dev.ericd.todoey.ui.screens.addtask.AddTaskScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -187,12 +188,12 @@ class TheAddTaskViewModel {
     @Test
     fun `Navigation button has correct image`() = runTest {
         // Arrange
-        val expected = R.drawable.ic_baseline_arrow_back_24
+        val expected = ImageResource.Id(R.drawable.ic_baseline_arrow_back_24)
 
         val theNavigationButton = viewModel.state.topBarState.navigationButtonState!!
 
         // Act
-        val actual = theNavigationButton.iconId
+        val actual = theNavigationButton.iconResource
 
         // Assert
         assertEquals(expected, actual)

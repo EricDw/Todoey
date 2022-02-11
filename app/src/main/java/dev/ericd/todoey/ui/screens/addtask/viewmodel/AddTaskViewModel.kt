@@ -6,6 +6,8 @@ import dev.ericd.todoey.R
 import dev.ericd.todoey.core.tasks.Task
 import dev.ericd.todoey.core.tasks.TaskModel
 import dev.ericd.todoey.ui.components.IconButtonComponentState
+import dev.ericd.todoey.ui.resource.ImageResource
+import dev.ericd.todoey.ui.resource.StringResource
 import dev.ericd.todoey.ui.screens.addtask.AddTaskScreen
 import dev.ericd.todoey.ui.screens.addtask.AddTaskScreenState
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +30,7 @@ open class AddTaskViewModel(
         topBarState.navigationButtonState =
             IconButtonComponentState {
 
-                iconId = R.drawable.ic_baseline_arrow_back_24
+                iconResource = ImageResource.Id(R.drawable.ic_baseline_arrow_back_24)
 
                 isEnabled = true
 
@@ -44,9 +46,9 @@ open class AddTaskViewModel(
         topBarState.actions += listOf(
             IconButtonComponentState {
 
-                iconId = R.drawable.ic_baseline_save_24
+                iconResource = ImageResource.Id(R.drawable.ic_baseline_save_24)
 
-                descriptionId = R.string.description_save_task
+                descriptionResource = StringResource.Id(R.string.description_save_task)
 
                 isEnabled = titleValue.text.isNotBlank()
 

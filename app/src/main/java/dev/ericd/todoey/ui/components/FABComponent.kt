@@ -12,33 +12,41 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import dev.ericd.todoey.R
+import dev.ericd.todoey.ui.resource.ImageResource
+import dev.ericd.todoey.ui.resource.StringResource
 
 interface FABComponent {
 
-    interface State: IconButtonComponent.State {
+    interface State : IconButtonComponent.State {
 
         interface Extended : State {
-            val textId: Int
+            val textResource: StringResource
         }
 
     }
 
 }
 
- class ExtendedFABComponentState(
+class ExtendedFABComponentState(
     initializer: ExtendedFABComponentState.() -> Unit = {}
 ) : FABComponent.State.Extended {
 
-    override var iconId by mutableStateOf(
-        R.drawable.ic_launcher_foreground
+    override var iconResource: ImageResource by mutableStateOf(
+        ImageResource.Id(
+            R.drawable.ic_baseline_image_24
+        )
     )
 
-     override val descriptionId by mutableStateOf(
-        R.string.empty
+    override var descriptionResource: StringResource by mutableStateOf(
+        StringResource.Id(
+            R.string.empty
+        )
     )
 
-    override var textId by mutableStateOf(
-        R.string.empty
+    override var textResource by mutableStateOf(
+        StringResource.Id(
+            R.string.empty
+        )
     )
 
     override var isEnabled by mutableStateOf(
@@ -63,18 +71,65 @@ fun ExtendedFABComponent(
         onClick = state.clickHandler,
         icon = {
 
-            Icon(
-                painter = painterResource(id = state.iconId),
-                contentDescription = stringResource(id = state.descriptionId)
-            )
+            val description = when (val resource = state.descriptionResource) {
+
+                is StringResource.String -> {
+                    resource.value
+                }
+
+                is StringResource.Id     -> {
+                    stringResource(id = resource.value)
+                }
+
+            }
+
+            when (val resource = state.iconResource) {
+
+                is ImageResource.Bitmap -> {
+
+                    Icon(
+                        resource.value,
+                        contentDescription = description
+                    )
+
+                }
+
+                is ImageResource.Id     -> {
+
+                    Icon(
+                        painter = painterResource(id = resource.value),
+                        contentDescription = description
+                    )
+
+                }
+
+            }
 
         },
         text = {
+
+            val value = when (
+                val resource = state.descriptionResource
+            ) {
+
+                is StringResource.String -> {
+                    resource.value
+                }
+
+                is StringResource.Id     -> {
+                    stringResource(id = resource.value)
+                }
+
+            }
+
             Text(
-                text = stringResource(id = state.textId)
+                text = value
             )
+
         }
+
     )
+
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -85,9 +140,9 @@ fun ExtendedFABComponentPreview() {
 
         ExtendedFABComponentState {
 
-            iconId = R.drawable.ic_baseline_add_task_24
+            iconResource = ImageResource.Id(R.drawable.ic_baseline_add_task_24)
 
-            textId = R.string.label_add_task
+            textResource = StringResource.Id(R.string.label_add_task)
 
         }
 

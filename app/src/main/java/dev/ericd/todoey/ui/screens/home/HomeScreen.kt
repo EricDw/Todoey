@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.ericd.todoey.R
 import dev.ericd.todoey.ui.components.*
+import dev.ericd.todoey.ui.resource.ImageResource
+import dev.ericd.todoey.ui.resource.StringResource
 import dev.ericd.todoey.ui.theme.TodoeyTheme
 
 interface HomeScreen {
@@ -37,14 +39,18 @@ class HomeScreenState(
 
     override val topBarState = TopBarComponentState {
 
-        titleId = R.string.app_name
+        titleResource = StringResource.Id(R.string.app_name)
 
         actions += listOf(
             IconButtonComponentState {
 
-                iconId = R.drawable.ic_baseline_settings_24
+                iconResource = ImageResource.Id(
+                    R.drawable.ic_baseline_settings_24
+                )
 
-                descriptionId = R.string.description_to_settings
+                descriptionResource = StringResource.Id(
+                    R.string.description_to_settings
+                )
 
             }
         )
@@ -57,9 +63,13 @@ class HomeScreenState(
 
         ExtendedFABComponentState {
 
-            iconId = R.drawable.ic_baseline_add_task_24
+            iconResource = ImageResource.Id(
+                R.drawable.ic_baseline_add_task_24
+            )
 
-            textId = R.string.label_add_task
+            textResource = StringResource.Id(
+                R.string.label_add_task
+            )
 
             isEnabled = true
 

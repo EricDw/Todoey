@@ -12,6 +12,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.ericd.todoey.R
+import dev.ericd.todoey.ui.resource.ImageResource
+import dev.ericd.todoey.ui.resource.StringResource
 import dev.ericd.todoey.ui.theme.TodoeyTheme
 
 interface TaskComponent {
@@ -50,9 +52,13 @@ class TaskState(
 
     override val deleteButtonState = IconButtonComponentState {
 
-        iconId = R.drawable.ic_baseline_delete_24
+        iconResource = ImageResource.Id(
+            R.drawable.ic_baseline_delete_24
+        )
 
-        descriptionId = R.string.description_delete_task
+        descriptionResource = StringResource.Id(
+            R.string.description_delete_task
+        )
 
     }
 
