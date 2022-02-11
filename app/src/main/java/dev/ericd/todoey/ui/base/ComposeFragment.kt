@@ -1,4 +1,4 @@
-package dev.ericd.todoey.controllers
+package dev.ericd.todoey.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater

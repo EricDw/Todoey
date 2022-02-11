@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import dev.ericd.todoey.BuildConfig
 import dev.ericd.todoey.R
 import dev.ericd.todoey.controllers.TodoeyApplication
-import dev.ericd.todoey.controllers.ComposeFragment
+import dev.ericd.todoey.ui.base.ComposeFragment
 import dev.ericd.todoey.ui.screens.home.HomeScreen
 import dev.ericd.todoey.ui.screens.home.HomeScreenState
 import dev.ericd.todoey.ui.screens.home.viewmodel.factory.HomeViewModelFactory

@@ -7,7 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dev.ericd.todoey.BuildConfig
 import dev.ericd.todoey.controllers.TodoeyApplication
-import dev.ericd.todoey.controllers.ComposeFragment
+import dev.ericd.todoey.ui.base.ComposeFragment
 import dev.ericd.todoey.ui.screens.addtask.AddTaskScreen
 import dev.ericd.todoey.ui.screens.addtask.viewmodel.AddTaskViewModel
 import dev.ericd.todoey.ui.screens.addtask.viewmodel.factory.AddTaskViewModelFactory
